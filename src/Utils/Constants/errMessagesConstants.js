@@ -5,4 +5,5 @@ export default {
   SERVER_DB_ERROR: "Internal Server Error",
   SERVER_PASSWORD_MATCHING_ERROR: "Internal Server Error",
   NETWORK_ERROR: "Network Failure",
+  CLIENT_STORAGE_ERROR: "ClientSide Error",
 };

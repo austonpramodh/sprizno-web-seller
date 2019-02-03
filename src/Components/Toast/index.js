@@ -1,11 +1,13 @@
 import React, { Fragment } from "react";
-import { withStyles, Snackbar, Button, IconButton, SnackbarContent } from "@material-ui/core";
+import { withStyles, Snackbar, IconButton, SnackbarContent } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import PropTypes from "prop-types";
 import styles from "./index.css";
 
 const Toast = props => {
-  const { classes, children, open, handleCloseButton } = props;
+  const { classes, children, open, handleClose } = props;
+  // button
+  // variant
 
   return (
     <Fragment>
@@ -16,7 +18,7 @@ const Toast = props => {
         }}
         open={open}
         autoHideDuration={3000}
-        onClose={handleCloseButton}
+        onClose={handleClose}
       >
         <SnackbarContent
           className={classes.toastContent}
@@ -27,7 +29,7 @@ const Toast = props => {
               aria-label="Close"
               color="inherit"
               className={classes.close}
-              onClick={handleCloseButton}
+              onClick={handleClose}
             >
               <CloseIcon className={classes.icon} />
             </IconButton>,
@@ -39,15 +41,15 @@ const Toast = props => {
 };
 Toast.propTypes = {
   classes: PropTypes.object,
-  children: PropTypes.array,
+  children: PropTypes.string,
   open: PropTypes.bool,
-  handleCloseButton: PropTypes.func,
+  handleClose: PropTypes.func,
 };
 Toast.defaultProps = {
   classes: {},
   children: [],
   open: false,
-  handleCloseButton: () => {},
+  handleClose: () => {},
 };
 
 export default withStyles(styles)(Toast);

@@ -1,6 +1,6 @@
-const styles = theme => {
-  console.log(theme);
-  return {
+const styles = theme =>
+  // console.log(theme);
+  ({
     paper: {
       maxWidth: "400px",
       margin: "auto",
@@ -12,10 +12,14 @@ const styles = theme => {
     },
     avatar: {},
     typography: {},
-    button: {
+    signinButton: {
       height: "40px",
+      maxWidth: "200px",
     },
-  };
-};
-
+    signupButton: {
+      height: "40px",
+      margin: "10px",
+      maxWidth: "200px",
+    },
+  });
 export default styles;

@@ -19,6 +19,9 @@ export default errCode => {
     case errCodes.SERVER_PASSWORD_MATCHING_ERROR:
       errMessage = errMessagesContants.SERVER_PASSWORD_MATCHING_ERROR;
       break;
+    case errCodes.CLIENT_STORAGE_ERROR:
+      errMessage = errMessagesContants.CLIENT_STORAGE_ERROR;
+      break;
     default:
       errMessage = errMessagesContants.DEFAULT;
   }

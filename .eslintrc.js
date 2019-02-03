@@ -27,6 +27,7 @@ module.exports = {
     "react/prefer-stateless-function": [1],
     "react/forbid-prop-types": [false],
     "react/no-unescaped-entities": [false],
+    "no-console": "error",
   },
   plugins: ["prettier"],
 };

@@ -8,51 +8,69 @@ import {
   FormControl,
   Input,
   InputLabel,
-  FormControlLabel,
-  Checkbox,
   Button,
   CircularProgress,
 } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import axios from "axios";
+import { NavLink, Redirect } from "react-router-dom";
 import Styles from "./index.css";
-import api from "../../Utils/Network/api";
+import API from "../../Utils/Network/api";
 import errCodeInterpretter from "../../Utils/ErrCodeInterpretter";
 import Toast from "../../Components/Toast";
 import errMessagesConstants from "../../Utils/Constants/errMessagesConstants";
+// import Storage from "../../Utils/Storage";
+import Authentication from "../../Utils/Authentication";
+import Loader from "../../Components/Loader";
 
 class Signin extends Component {
   state = {
     email: "",
     password: "",
     isLoading: false,
+    err: false,
     errMessage: "",
+    isAuthenticated: false,
+    pageLoading: true,
   };
+
+  componentWillMount() {
+    // console.log("component will mount");
+    Authentication.isAuthenticated((err, isAuthenticated) => {
+      if (err) {
+        // err
+      } else this.setState({ isAuthenticated, pageLoading: false });
+    });
+  }
 
   render() {
     const { classes } = this.props;
-    const { email, password, isLoading, errMessage } = this.state;
+    const {
+      email,
+      password,
+      isLoading,
+      errMessage,
+      err,
+      isAuthenticated,
+      pageLoading,
+    } = this.state;
 
     const handleOnChange = event => {
-      if (errMessage) {
-        this.setState({ errMessage: undefined });
+      if (err) {
+        this.setState({ errMessage: undefined, err: false });
       }
       const { name, value } = event.target;
       this.setState({ [name]: value });
     };
     const handleSignIn = () => {
-      console.log("requesting");
-      const params = api.SIGNIN;
+      // console.log("requesting");
+      this.setState({ isLoading: true });
+      const params = API.SIGNIN;
       params.data = {
         email,
         password,
       };
-      // set isLoading state
-      // prepare data obj
-      // hit Api request
-      // get Token
-      this.setState({ isLoading: true });
-      console.log("params ", params);
+      // console.log("params ", params);
       axios({
         method: params.method,
         url: params.url,
@@ -60,81 +78,108 @@ class Signin extends Component {
         data: params.data,
       })
         .then(res => {
-          console.log("rrsponse ", res);
+          // console.log("rrsponse ", res);
           const { data } = res;
-          console.log("data ", data);
           if (!data.success) {
-            console.log("errcode ", res.data.errCode);
-            this.setState({ errMessage: errCodeInterpretter(data.errCode) });
+            // console.log("errcode ", data.errCode);
+            this.setState({ err: true, errMessage: errCodeInterpretter(data.errCode) });
           } else {
-            console.log("successFul");
+            // console.log("successFul");
             // store token
-            // route to dashboard
+            Authentication.authenticate(data.tokens, err1 => {
+              if (err1) {
+                // console.log("err", err1);
+                this.setState({ err: true, errMessage: errCodeInterpretter(err1.errCode) });
+              } else {
+                // console.log("all OK");
+                this.setState({ isLoading: false, isAuthenticated: true });
+                // redirect to dashboard
+              }
+            });
           }
           this.setState({ isLoading: false });
         })
-        .catch(err1 => {
-          console.log(err1);
-          this.setState({ errMessage: errMessagesConstants.NETWORK_ERROR });
+        .catch(() => {
+          // console.log(err1);
+          this.setState({ err: true, errMessage: errMessagesConstants.NETWORK_ERROR });
           this.setState({ isLoading: false });
         });
     };
     return (
       <Fragment>
-        <Paper className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography className={classes.typography} component="h1" variant="h5">
-            Sign In
-          </Typography>
-          <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="email">Email Address</InputLabel>
-            <Input
-              id="email"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              onChange={handleOnChange}
-              value={email}
-              disabled={isLoading}
-            />
-          </FormControl>
-          <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="password">Password</InputLabel>
-            <Input
-              name="password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              onChange={handleOnChange}
-              value={password}
-              disabled={isLoading}
-            />
-          </FormControl>
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button
-            fullWidth
-            variant="contained"
-            color="primary"
-            onClick={handleSignIn}
-            disabled={isLoading}
-            className={classes.button}
-          >
-            {isLoading ? <CircularProgress size={30} /> : "Sign in"}
-          </Button>
-          <Toast
-            open={errMessage}
-            handleCloseButton={() => {
-              this.setState({ errMessage: "" });
-            }}
-          >
-            {errMessage}
-          </Toast>
-        </Paper>
+        {pageLoading && <Loader />}
+        {!pageLoading && isAuthenticated && <Redirect to="/" />}
+        {!pageLoading && !isAuthenticated && (
+          <Fragment>
+            <Paper className={classes.paper}>
+              <Avatar className={classes.avatar}>
+                <LockOutlinedIcon />
+              </Avatar>
+              <Typography className={classes.typography} component="h1" variant="h5">
+                Sign In
+              </Typography>
+              <FormControl margin="normal" required fullWidth>
+                <InputLabel htmlFor="email">Email Address</InputLabel>
+                <Input
+                  id="email"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                  onChange={handleOnChange}
+                  value={email}
+                  disabled={isLoading}
+                />
+              </FormControl>
+              <FormControl margin="normal" required fullWidth>
+                <InputLabel htmlFor="password">Password</InputLabel>
+                <Input
+                  name="password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  onChange={handleOnChange}
+                  value={password}
+                  disabled={isLoading}
+                />
+              </FormControl>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={handleSignIn}
+                disabled={isLoading}
+                className={classes.signinButton}
+              >
+                {isLoading ? <CircularProgress size={30} /> : "Sign in"}
+              </Button>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                // onClick={handleSignup}
+                className={classes.signupButton}
+              >
+                <NavLink
+                  to="/signup"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                  }}
+                >
+                  Register
+                </NavLink>
+              </Button>
+              <Toast
+                open={err}
+                handleClose={() => {
+                  this.setState({ err: false, errMessage: "" });
+                }}
+              >
+                {errMessage}
+              </Toast>
+            </Paper>
+          </Fragment>
+        )}
       </Fragment>
     );
   }
