@@ -100,6 +100,7 @@ selectNodeVersion () {
 
 echo Handling node.js deployment.
 # 1. Select node version
+echo "selecting NodeVersion"
 selectNodeVersion
 
 # 2. Install npm packages
