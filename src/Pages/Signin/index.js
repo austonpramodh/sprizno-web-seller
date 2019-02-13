@@ -78,10 +78,8 @@ class Signin extends Component {
         data: params.data,
       })
         .then(res => {
-          // console.log("rrsponse ", res);
           const { data } = res;
           if (!data.success) {
-            // console.log("errcode ", data.errCode);
             this.setState({ err: true, errMessage: errCodeInterpretter(data.errCode) });
           } else {
             // console.log("successFul");
@@ -100,9 +98,11 @@ class Signin extends Component {
           this.setState({ isLoading: false });
         })
         .catch(() => {
-          // console.log(err1);
-          this.setState({ err: true, errMessage: errMessagesConstants.NETWORK_ERROR });
-          this.setState({ isLoading: false });
+          this.setState({
+            err: true,
+            errMessage: errMessagesConstants.NETWORK_ERROR,
+            isLoading: false,
+          });
         });
     };
     return (

@@ -1,7 +1,7 @@
 export default {
   URLs: {
-    BASE_URL: "http://192.168.1.105:5000/",
-    // BASE_URL: "https://address/",
+    // BASE_URL: "localhost:5000/",
+    BASE_URL: "https://sprizno-api.azurewebsites.net/",
     SIGNIN: "auth/signin",
     SIGNUP: "auth/signup",
   },
