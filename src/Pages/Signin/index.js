@@ -65,7 +65,7 @@ class Signin extends Component {
     const handleSignIn = () => {
       // console.log("requesting");
       this.setState({ isLoading: true });
-      const params = API.SIGNIN;
+      const params = API.AUTH.SIGNIN;
       params.data = {
         email,
         password,

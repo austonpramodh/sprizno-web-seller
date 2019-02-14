@@ -71,7 +71,7 @@ class Signup extends Component {
     const handleSignUp = () => {
       this.setState({ isLoading: true });
       // vaidate
-      const params = API.SIGNUP;
+      const params = API.AUTH.SIGNUP;
       params.data = {
         email,
         password,
@@ -87,7 +87,11 @@ class Signup extends Component {
           const { data } = res;
           if (!data.success) {
             // err
-            this.setState({ err: true, errMessage: errCodeInterpretter(data.errCode) });
+            this.setState({
+              err: true,
+              errMessage: errCodeInterpretter(data.errCode),
+              isLoading: false,
+            });
           } else {
             // authenticate
             Authentication.authenticate(data.tokens, err1 => {
