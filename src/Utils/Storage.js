@@ -18,21 +18,18 @@ const storeTokens = ({ token, refreshToken }, cb) => {
   });
 };
 
-const getTokens = cb => {
+const getTokens = async cb => {
   const { keys } = storageConstants;
-  Storage.getItem(keys.TOKEN, (err, token) => {
-    if (err) {
-      // call cb with err
-      cb(err);
-    } else {
-      Storage.getItem(keys.REFRESH_TOKEN, (err1, refreshToken) => {
-        if (err1) {
-          // call cb with err
-          cb(err);
-        } else cb(err1, { token, refreshToken });
-      });
-    }
+  const token = await Storage.getItem(keys.TOKEN);
+  const refreshToken = await Storage.getItem(keys.REFRESH_TOKEN);
+  if (cb) {
+    cb(null, { token, refreshToken });
+    return null;
+  }
+  return new Promise(res => {
+    res({ token, refreshToken });
   });
+  // return { token, refreshToken };
 };
 const deleteTokens = () => {
   // const { Keys } = storageConstants;
