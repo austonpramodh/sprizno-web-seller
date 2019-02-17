@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import {
   withStyles,
@@ -17,7 +17,7 @@ import Authentication from "../../Utils/Authentication";
 import AddProduct from "../../Components/AddProduct";
 import ListProducts from "../../Components/ListProducts";
 
-class Dashboard extends Component {
+class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,7 +27,6 @@ class Dashboard extends Component {
 
   render() {
     const componentsList = [AddProduct, ListProducts];
-    const Components = componentsList.map(Item => <Item />);
     const { classes } = this.props;
     const { selectedIndex } = this.state;
     const handleClick = key => {
@@ -78,7 +77,11 @@ class Dashboard extends Component {
         </Drawer>
         <div className={classes.content}>
           <div className={classes.toolbar} />
-          <Fragment>{Components[selectedIndex]}</Fragment>
+          <Fragment>
+            {componentsList.map((Component, key) =>
+              key === selectedIndex ? <Component key={Component.meta.name} /> : "",
+            )}
+          </Fragment>
         </div>
       </div>
     );
