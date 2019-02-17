@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import {
   withStyles,
@@ -11,27 +11,32 @@ import {
   ListItemIcon,
   ListItemText,
   Button,
+  IconButton,
 } from "@material-ui/core";
+import { Menu as MenuIcon } from "@material-ui/icons";
 import styles from "./index.css";
 import Authentication from "../../Utils/Authentication";
 import AddProduct from "../../Components/AddProduct";
 import ListProducts from "../../Components/ListProducts";
 
-class Dashboard extends Component {
+class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedIndex: 0,
+      isDrawerOpen: true,
     };
   }
 
   render() {
-    const componentsList = [AddProduct, ListProducts];
-    const Components = componentsList.map(Item => <Item />);
+    const componentsList = [ListProducts, AddProduct];
     const { classes } = this.props;
-    const { selectedIndex } = this.state;
+    const { selectedIndex, isDrawerOpen } = this.state;
     const handleClick = key => {
       this.setState({ selectedIndex: key });
+    };
+    const handleDrawerOpen = () => {
+      this.setState({ isDrawerOpen: !isDrawerOpen });
     };
 
     const handleLogout = () => {
@@ -44,6 +49,14 @@ class Dashboard extends Component {
       <div className={classes.root}>
         <AppBar position="fixed" className={classes.appBar}>
           <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="Open drawer"
+              onClick={handleDrawerOpen}
+              className={`${classes.menuIcon}`}
+            >
+              <MenuIcon />
+            </IconButton>
             <Typography variant="h6" color="inherit" noWrap className={classes.brand}>
               Sprizno
             </Typography>
@@ -54,7 +67,8 @@ class Dashboard extends Component {
         </AppBar>
         <Drawer
           className={classes.drawer}
-          variant="permanent"
+          variant="persistent"
+          open={isDrawerOpen}
           classes={{
             paper: classes.drawerPaper,
           }}
@@ -78,7 +92,11 @@ class Dashboard extends Component {
         </Drawer>
         <div className={classes.content}>
           <div className={classes.toolbar} />
-          <Fragment>{Components[selectedIndex]}</Fragment>
+          <Fragment>
+            {componentsList.map((Component, key) =>
+              key === selectedIndex ? <Component key={Component.meta.name} /> : "",
+            )}
+          </Fragment>
         </div>
       </div>
     );

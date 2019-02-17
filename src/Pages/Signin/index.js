@@ -118,7 +118,7 @@ class Signin extends Component {
               <Typography className={classes.typography} component="h1" variant="h5">
                 Sign In
               </Typography>
-              <FormControl margin="normal" required fullWidth>
+              <FormControl disabled={isLoading} margin="normal" required fullWidth>
                 <InputLabel htmlFor="email">Email Address</InputLabel>
                 <Input
                   id="email"
@@ -127,10 +127,9 @@ class Signin extends Component {
                   autoFocus
                   onChange={handleOnChange}
                   value={email}
-                  disabled={isLoading}
                 />
               </FormControl>
-              <FormControl margin="normal" required fullWidth>
+              <FormControl disabled={isLoading} margin="normal" required fullWidth>
                 <InputLabel htmlFor="password">Password</InputLabel>
                 <Input
                   name="password"
@@ -139,7 +138,6 @@ class Signin extends Component {
                   autoComplete="current-password"
                   onChange={handleOnChange}
                   value={password}
-                  disabled={isLoading}
                 />
               </FormControl>
               <Button
@@ -170,13 +168,13 @@ class Signin extends Component {
                 </NavLink>
               </Button>
               <Toast
+                variant="error"
+                message={errMessage}
                 open={err}
                 handleClose={() => {
                   this.setState({ err: false, errMessage: "" });
                 }}
-              >
-                {errMessage}
-              </Toast>
+              />
             </Paper>
           </Fragment>
         )}

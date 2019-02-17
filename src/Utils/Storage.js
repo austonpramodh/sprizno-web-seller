@@ -5,17 +5,22 @@ import storageConstants from "./Constants/storageConstants";
 const Storage = localforage.createInstance(storageConstants.config);
 const storeTokens = ({ token, refreshToken }, cb) => {
   const { keys } = storageConstants;
-  Storage.setItem(keys.TOKEN, token, err => {
-    if (err) {
-      cb({ ...err, errCode: "4006" });
-    } else {
-      Storage.setItem(keys.REFRESH_TOKEN, refreshToken, err1 => {
-        if (err1) {
-          cb({ ...err1, errCode: "4006" });
-        } else cb();
-      });
-    }
-  });
+  if (cb) {
+    Storage.setItem(keys.TOKEN, token, err => {
+      if (err) {
+        cb({ ...err, errCode: "4006" });
+      } else {
+        Storage.setItem(keys.REFRESH_TOKEN, refreshToken, err1 => {
+          if (err1) {
+            cb({ ...err1, errCode: "4006" });
+          } else cb();
+        });
+      }
+    });
+  } else {
+    Storage.setItem(keys.TOKEN, token);
+    Storage.setItem(keys.REFRESH_TOKEN, refreshToken);
+  }
 };
 
 const getTokens = async cb => {

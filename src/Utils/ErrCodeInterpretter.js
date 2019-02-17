@@ -4,6 +4,9 @@ import errMessagesContants from "./Constants/errMessagesConstants";
 export default errCode => {
   let errMessage;
   switch (errCode) {
+    case errCodes.UNKNOWN_ERROR:
+      errMessage = errMessagesContants.UNKNOWN_ERROR;
+      break;
     case errCodes.USER_NOT_FOUND:
       errMessage = errMessagesContants.USER_NOT_FOUND;
       break;
