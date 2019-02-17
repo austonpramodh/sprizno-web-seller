@@ -20,6 +20,10 @@ const styles = theme => ({
     padding: theme.spacing.unit * 3,
   },
   toolbar: theme.mixins.toolbar,
+  menuIcon: {
+    marginLeft: 12,
+    marginRight: 20,
+  },
 });
 
 export default styles;

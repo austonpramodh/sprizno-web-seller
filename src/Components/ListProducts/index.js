@@ -1,14 +1,17 @@
 import React, { Component, Fragment } from "react";
 import { MoveToInbox as InboxIcon } from "@material-ui/icons";
 import Axios from "axios";
+import { TableHead, TableCell, TableRow, Table, TableBody } from "@material-ui/core";
 import nameConstants from "../../Utils/Constants/nameConstants";
 import API from "../../Utils/Network/api";
+import Loader from "../Loader";
 
 export default class ListProducts extends Component {
   static meta = { name: nameConstants.LIST_PRODUCTS, icon: InboxIcon };
 
   state = {
     products: [],
+    isLoading: true,
   };
 
   componentDidMount() {
@@ -17,17 +20,24 @@ export default class ListProducts extends Component {
   }
 
   getAllProducts = async () => {
+    const { isLoading } = this.state;
+    if (!isLoading) {
+      this.setState({ isLoading: true });
+    }
     const ProductsAPI = await API.PRODUCT();
     Axios({ ...ProductsAPI.GET_ALL })
       .then(res => {
-        this.setState({ products: res.data.data });
+        this.setState({ products: res.data.data, isLoading: false });
       })
-      .catch(() => {});
+      .catch(() => {
+        this.setState({ isLoading: false });
+      });
   };
 
   render() {
-    const { products } = this.state;
+    const { products, isLoading } = this.state;
     const deleteProduct = async id => {
+      this.setState({ isLoading: true });
       const ProductAPI = await API.PRODUCT();
       const params = ProductAPI.DELETE;
       params.data = { id };
@@ -37,29 +47,51 @@ export default class ListProducts extends Component {
         })
         .catch();
     };
-    return (
+    return isLoading ? (
+      <Loader />
+    ) : (
       <Fragment>
-        {products.length > 0
-          ? products.map(product => (
-              // eslint-disable-next-line no-underscore-dangle
-              <Fragment key={product._id}>
-                <div>name : {product.name}</div>
-                <div>Price: {product.price}</div>
-                <div>Description: {product.description}</div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    // eslint-disable-next-line no-underscore-dangle
-                    deleteProduct(product._id);
-                  }}
-                >
-                  delete
-                </button>
-                <br />
-                <br />
-              </Fragment>
-            ))
-          : "NOthing to show"}
+        {products.length > 0 ? (
+          <Fragment>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>No</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Price</TableCell>
+                  <TableCell>Description</TableCell>
+                  <TableCell>Delete</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {products.map((product, index) => (
+                  // eslint-disable-next-line no-underscore-dangle
+                  <TableRow key={product._id}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell component="th" scope="row">
+                      {product.name}
+                    </TableCell>
+                    <TableCell>{product.price}</TableCell>
+                    <TableCell>{product.description}</TableCell>
+                    <TableCell>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          // eslint-disable-next-line no-underscore-dangle
+                          deleteProduct(product._id);
+                        }}
+                      >
+                        delete
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Fragment>
+        ) : (
+          "NOthing to show"
+        )}
       </Fragment>
     );
   }
