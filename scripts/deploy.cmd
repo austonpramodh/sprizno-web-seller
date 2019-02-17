@@ -94,6 +94,13 @@ echo Handling node.js deployment, running on .cmd .
 echo Selecting NodeVersion
 call :SelectNodeVersion
 
+:: 4. Cleanig Repository
+echo Cleaning Repository Folder For Clean installation
+IF EXIST "%DEPLOYMENT_SOURCE%\node_modules" (
+  rm -r "%DEPLOYMENT_SOURCE%\node_modules"
+    echo Cleaning Completed
+)
+
 :: 2. Install npm packages
 echo Installing NPM Packages
 IF EXIST "%DEPLOYMENT_SOURCE%\package.json" (
