@@ -8,12 +8,15 @@ import {
   Input,
   Button,
   withStyles,
+  CircularProgress,
 } from "@material-ui/core";
 import Axios from "axios";
 import PropTypes from "prop-types";
 import nameConstants from "../../Utils/Constants/nameConstants";
 import API from "../../Utils/Network/api";
 import styles from "./index.css";
+import Toast from "../Toast";
+import ErrCodeInterpretter from "../../Utils/ErrCodeInterpretter";
 
 class AddProduct extends Component {
   static meta = { name: nameConstants.ADD_PRODUCT, icon: InboxIcon };
@@ -25,11 +28,14 @@ class AddProduct extends Component {
       name: "",
       price: "",
       description: "",
+      showToast: false,
+      toastMessage: null,
+      isLoading: false,
     };
   }
 
   render() {
-    const { name, price, description } = this.state;
+    const { name, price, description, showToast, toastMessage, isLoading } = this.state;
     const { classes } = this.props;
 
     const handleOnChange = event => {
@@ -39,23 +45,32 @@ class AddProduct extends Component {
     };
 
     const handleSubmit = async () => {
+      this.setState({ isLoading: true });
       const ProductAPIs = await API.PRODUCT();
       const params = ProductAPIs.ADD;
       params.data = this.state;
       Axios({ ...params })
-        .then(() => {
+        .then(res => {
           // err scenarios
-          this.setState({ name: "", price: "", description: "" });
+          if (res.data.success) {
+            this.setState({ name: "", price: "", description: "" });
+          } else {
+            const { errCode } = res.data;
+            this.setState({ showToast: true, toastMessage: ErrCodeInterpretter(errCode) });
+          }
+          this.setState({ isLoading: false });
         })
         .catch(() => {
           // err scenarios
+          this.setState({ showToast: true, toastMessage: ErrCodeInterpretter(0) });
+          this.setState({ isLoading: false });
         });
     };
     return (
       <div className={classes.container}>
         <Paper className={classes.paper}>
           <Typography>AddProduct</Typography>
-          <FormControl margin="normal" required fullWidth>
+          <FormControl disabled={isLoading} margin="normal" required fullWidth>
             <InputLabel htmlFor="name">Name</InputLabel>
             <Input
               id="name"
@@ -66,30 +81,38 @@ class AddProduct extends Component {
               value={name}
             />
           </FormControl>
-          <FormControl margin="normal" required fullWidth>
+          <FormControl disabled={isLoading} margin="normal" required fullWidth>
             <InputLabel htmlFor="price">price</InputLabel>
             <Input
               id="price"
               name="price"
               autoComplete="no"
-              autoFocus
               onChange={handleOnChange}
               value={price}
             />
           </FormControl>
-          <FormControl margin="normal" required fullWidth>
+          <FormControl disabled={isLoading} margin="normal" required fullWidth>
             <InputLabel htmlFor="description">Description</InputLabel>
             <Input
               id="description"
               name="description"
               autoComplete="no"
-              autoFocus
               onChange={handleOnChange}
               value={description}
             />
           </FormControl>
-          <Button onClick={handleSubmit}>Submit</Button>
+          <Button disabled={isLoading} onClick={handleSubmit}>
+            {isLoading ? <CircularProgress size={30} /> : "Submit"}
+          </Button>
         </Paper>
+        <Toast
+          variant="error"
+          open={showToast}
+          message={toastMessage}
+          handleClose={() => {
+            this.setState({ showToast: false, toastMessage: "" });
+          }}
+        />
       </div>
     );
   }

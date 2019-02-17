@@ -1,4 +1,6 @@
 export default {
+  UNKNOWN_ERROR: "Unknown Error",
+  DEFAULT: "Unknown Error",
   USER_NOT_FOUND: "Username Invalid",
   PASSWORD_INVALID: "Password Invalid",
   USER_ALREADY_REGISTERED: "Username Already Registered",
