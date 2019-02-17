@@ -2,7 +2,7 @@ export default {
   URLs: {
     // BASE_URL: "http://localhost:5000/",
     BASE_URL: "https://sprizno-api.azurewebsites.net/",
-    AUTH: { SIGNIN: "auth/signin", SIGNUP: "auth/signup" },
+    AUTH: { SIGNIN: "auth/signin", SIGNUP: "auth/signup", REFRESH_TOKENS: "auth/refreshtokens" },
     PRODUCT: {
       ADD: "product/add",
       GET_ALL: "product/getall",
@@ -13,7 +13,7 @@ export default {
   GET: "get",
   API_VERSION_HEADER: "api-version",
   API_VERSIONS: {
-    AUTH: { SIGNIN: "1.0.0", SIGNUP: "1.0.0" },
+    AUTH: { SIGNIN: "1.0.0", SIGNUP: "1.0.0", REFRESH_TOKENS: "1.0.0" },
     PRODUCT: {
       ADD: "1.0.0",
       GET_ALL: "1.0.0",

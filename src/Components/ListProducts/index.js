@@ -1,17 +1,17 @@
 import React, { Component, Fragment } from "react";
 import { MoveToInbox as InboxIcon } from "@material-ui/icons";
-import Axios from "axios";
 import { TableHead, TableCell, TableRow, Table, TableBody } from "@material-ui/core";
 import nameConstants from "../../Utils/Constants/nameConstants";
 import API from "../../Utils/Network/api";
 import Loader from "../Loader";
+import request from "../../Utils/Network/request";
 
 export default class ListProducts extends Component {
   static meta = { name: nameConstants.LIST_PRODUCTS, icon: InboxIcon };
 
   state = {
     products: [],
-    isLoading: true,
+    isPageLoading: true,
   };
 
   componentDidMount() {
@@ -20,34 +20,29 @@ export default class ListProducts extends Component {
   }
 
   getAllProducts = async () => {
-    const { isLoading } = this.state;
-    if (!isLoading) {
-      this.setState({ isLoading: true });
-    }
-    const ProductsAPI = await API.PRODUCT();
-    Axios({ ...ProductsAPI.GET_ALL })
-      .then(res => {
-        this.setState({ products: res.data.data, isLoading: false });
-      })
-      .catch(() => {
-        this.setState({ isLoading: false });
-      });
+    const params = API.PRODUCT.GET_ALL;
+    const response = await request(params);
+    if (response.data) {
+      if (response.data.success) {
+        this.setState({ products: response.data.data, isPageLoading: false });
+      } // else redirect to Login
+    } else this.setState({ isPageLoading: false }); // network failure
   };
 
   render() {
-    const { products, isLoading } = this.state;
+    const { products, isPageLoading } = this.state;
     const deleteProduct = async id => {
-      this.setState({ isLoading: true });
-      const ProductAPI = await API.PRODUCT();
-      const params = ProductAPI.DELETE;
+      this.setState({ isPageLoading: true });
+      const params = API.PRODUCT.DELETE;
       params.data = { id };
-      Axios({ ...params })
-        .then(() => {
+      const response = await request(params);
+      if (response.data) {
+        if (response.data.success) {
           this.getAllProducts();
-        })
-        .catch();
+        } else this.setState({ isPageLoading: false }); // Internal Error
+      } else this.setState({ isPageLoading: false }); // network failure
     };
-    return isLoading ? (
+    return isPageLoading ? (
       <Loader />
     ) : (
       <Fragment>
