@@ -21,7 +21,6 @@ class RequireAuth extends React.Component {
         // console.log("amn Error", err);
       } else {
         this.setState({ loading: false, isAuthenticated });
-        // this.setState({ loading: false, isAuthenticated });
       }
     });
   }

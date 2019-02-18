@@ -1,7 +1,8 @@
 export default {
   URLs: {
-    // BASE_URL: "http://localhost:5000/",
-    BASE_URL: "https://sprizno-api.azurewebsites.net/",
+    // BASE_URL: "http://localhost:5000/seller/",
+    // BASE_URL: "https://sprizno-api.azurewebsites.net/sellers",
+    BASE_URL: "https://api.ipsimata.in/sellers",
     AUTH: { SIGNIN: "auth/signin", SIGNUP: "auth/signup", REFRESH_TOKENS: "auth/refreshtokens" },
     PRODUCT: {
       ADD: "product/add",
