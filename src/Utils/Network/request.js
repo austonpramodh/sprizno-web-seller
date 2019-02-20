@@ -3,6 +3,7 @@ import TokenFunctions from "../tokenFunctions";
 import Storage from "../Storage";
 import apiConstants from "../Constants/apiConstants";
 import API from "./api";
+import Authentication from "../Authentication";
 
 const request = async params =>
   new Promise(async resolve => {
@@ -14,7 +15,9 @@ const request = async params =>
           ...params,
           headers: { ...params.headers, [apiConstants.TOKEN_HEADERS.AUTHORIZATION]: tokens.token },
         });
-        resolve(response);
+        if (response.data) {
+          resolve({ success: response.data.success, data: response.data });
+        } else resolve({ success: false }); // server error
       } catch (error) {
         resolve({ ...error, success: false, errMessage: "Network Failure" });
       }
@@ -40,18 +43,28 @@ const request = async params =>
                 [apiConstants.TOKEN_HEADERS.AUTHORIZATION]: newTokens.token,
               },
             });
-            resolve(response);
+            if (response.data && response.data.sucess) {
+              resolve({ success: "true", data: response.data });
+            } else resolve({ success: false, data: response.data });
           } catch (error) {
             resolve({ ...error, success: false, errMessage: "Network Failure" });
           }
         } else if (refreshResponse.data && !refreshResponse.data.success) {
-          resolve({ success: false, redirect: true, errMessage: "User Logged Out" });
+          // redirect
+          Authentication.logout();
+          // eslint-disable-next-line no-undef
+          window.location.href = "/signin";
+          // resolve({ success: false, redirect: true, errMessage: "User Logged Out" });
         }
       } catch (err) {
-        resolve({ ...err, success: false, errMessage: "Network Failure" });
+        resolve({ ...err, success: false, errMessage: "Network Error" });
       }
     } else {
-      resolve({ success: false, redirect: true, errMessage: "User Logged Out" });
+      Authentication.logout();
+      // eslint-disable-next-line no-undef
+      window.location.href = "/signin";
+      // redirect
+      // resolve({ success: false, redirect: true, errMessage: "User Logged Out" });
     }
   });
 
