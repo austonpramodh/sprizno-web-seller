@@ -1,13 +1,12 @@
 import React, { Component, Fragment } from "react";
-import { MoveToInbox as InboxIcon } from "@material-ui/icons";
 import { TableHead, TableCell, TableRow, Table, TableBody } from "@material-ui/core";
-import nameConstants from "../../Utils/Constants/nameConstants";
 import API from "../../Utils/Network/api";
 import Loader from "../Loader";
 import request from "../../Utils/Network/request";
+import idConstants from "../../Utils/Constants/idConstants";
 
 export default class ListProducts extends Component {
-  static meta = { name: nameConstants.LIST_PRODUCTS, icon: InboxIcon };
+  static meta = { id: idConstants.LIST_PRODUCTS };
 
   state = {
     products: [],

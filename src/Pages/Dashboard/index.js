@@ -1,40 +1,30 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
-import {
-  withStyles,
-  AppBar,
-  Toolbar,
-  Typography,
-  List,
-  Drawer,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Button,
-  IconButton,
-} from "@material-ui/core";
+import { withStyles, AppBar, Toolbar, Typography, Button, IconButton } from "@material-ui/core";
 import { Menu as MenuIcon } from "@material-ui/icons";
 import styles from "./index.css";
 import Authentication from "../../Utils/Authentication";
 import AddProduct from "../../Components/AddProduct";
 import ListProducts from "../../Components/ListProducts";
+import AppDrawer from "../../Components/AppDrawer";
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedIndex: 0,
+      selectedId: "",
       isDrawerOpen: true,
     };
   }
 
+  handleIdSelction = id => {
+    this.setState({ selectedId: id });
+  };
+
   render() {
     const componentsList = [ListProducts, AddProduct];
     const { classes } = this.props;
-    const { selectedIndex, isDrawerOpen } = this.state;
-    const handleClick = key => {
-      this.setState({ selectedIndex: key });
-    };
+    const { selectedId, isDrawerOpen } = this.state;
     const handleDrawerOpen = () => {
       this.setState({ isDrawerOpen: !isDrawerOpen });
     };
@@ -43,6 +33,10 @@ class Dashboard extends React.Component {
       const { history } = this.props;
       Authentication.logout();
       history.push("/signin");
+    };
+    const defaultComponent = () => {
+      const Component = componentsList[0];
+      return <Component />;
     };
 
     return (
@@ -65,37 +59,16 @@ class Dashboard extends React.Component {
             </Button>
           </Toolbar>
         </AppBar>
-        <Drawer
-          className={classes.drawer}
-          variant="persistent"
-          open={isDrawerOpen}
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-        >
-          <div className={classes.toolbar} />
-          <List>
-            {componentsList.map((item, key) => (
-              <ListItem
-                selected={key === selectedIndex}
-                button
-                key={item.meta.name}
-                onClick={() => {
-                  handleClick(key);
-                }}
-              >
-                <ListItemIcon>{<item.meta.icon />}</ListItemIcon>
-                <ListItemText primary={item.meta.name} />
-              </ListItem>
-            ))}
-          </List>
-        </Drawer>
+        <div className={classes.toolbar} />
+        <AppDrawer isOpen={isDrawerOpen} handleSelction={this.handleIdSelction} />
+        <div className={classes.toolbar} />
         <div className={classes.content}>
-          <div className={classes.toolbar} />
           <Fragment>
-            {componentsList.map((Component, key) =>
-              key === selectedIndex ? <Component key={Component.meta.name} /> : "",
-            )}
+            {selectedId
+              ? componentsList.map(Component =>
+                  Component.meta.id === selectedId ? <Component /> : "",
+                )
+              : defaultComponent()}
           </Fragment>
         </div>
       </div>

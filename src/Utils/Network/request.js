@@ -5,7 +5,7 @@ import apiConstants from "../Constants/apiConstants";
 import API from "./api";
 import Authentication from "../Authentication";
 
-const request = async params =>
+const request = async (params, cancelToken) =>
   new Promise(async resolve => {
     // check if token valid
     const tokens = await Storage.getTokens();
@@ -13,6 +13,7 @@ const request = async params =>
       try {
         const response = await Axios({
           ...params,
+          cancelToken: cancelToken || "",
           headers: { ...params.headers, [apiConstants.TOKEN_HEADERS.AUTHORIZATION]: tokens.token },
         });
         if (response.data) {
@@ -38,6 +39,7 @@ const request = async params =>
           try {
             const response = await Axios({
               ...params,
+              cancelToken: cancelToken || "",
               headers: {
                 ...params.headers,
                 [apiConstants.TOKEN_HEADERS.AUTHORIZATION]: newTokens.token,
@@ -67,5 +69,7 @@ const request = async params =>
       // resolve({ success: false, redirect: true, errMessage: "User Logged Out" });
     }
   });
+
+request.cancel = Axios.CancelToken.source();
 
 export default request;

@@ -1,0 +1,5 @@
+export default {
+  CATALOG: "CATALOG",
+  LIST_PRODUCTS: "LISTPRODUCTS",
+  ADD_PRODUCT: "ADDPRODUCT",
+};

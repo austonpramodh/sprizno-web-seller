@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { MoveToInbox as InboxIcon } from "@material-ui/icons";
 import {
   Paper,
   Typography,
@@ -11,14 +10,14 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import PropTypes from "prop-types";
-import nameConstants from "../../Utils/Constants/nameConstants";
 import API from "../../Utils/Network/api";
 import styles from "./index.css";
 import Toast from "../Toast";
 import request from "../../Utils/Network/request";
+import idConstants from "../../Utils/Constants/idConstants";
 
 class AddProduct extends Component {
-  static meta = { name: nameConstants.ADD_PRODUCT, icon: InboxIcon };
+  static meta = { id: idConstants.ADD_PRODUCT };
 
   constructor(props) {
     super(props);

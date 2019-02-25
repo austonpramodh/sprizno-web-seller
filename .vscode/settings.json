@@ -7,5 +7,5 @@
   "sync.gist": "d16b235d188cdc145e8a132c4cfff977",
   "sync.autoUpload": true,
   "sync.autoDownload": true,
-  "workbench.iconTheme": "vscode-icons"
+  "workbench.iconTheme": "material-icon-theme"
 }
