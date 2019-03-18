@@ -3,18 +3,23 @@ import idConstants from "../../Utils/Constants/idConstants";
 
 export default [
   {
-    name: "Catalog",
+    name: "List Items",
     icon: NextWeek,
-    id: idConstants.CATALOG,
-    childItems: [
-      {
-        name: "List Products",
-        id: idConstants.LIST_PRODUCTS,
-      },
-      {
-        name: "Add Product",
-        id: idConstants.ADD_PRODUCT,
-      },
-    ],
+    id: idConstants.LIST_PRODUCTS,
   },
+  // {
+  //   name: "Catalog",
+  //   icon: NextWeek,
+  //   id: idConstants.CATALOG,
+  //   childItems: [
+  //     {
+  //       name: "List Products",
+  //       id: idConstants.LIST_PRODUCTS,
+  //     },
+  //     {
+  //       name: "Add Product",
+  //       id: idConstants.ADD_PRODUCT,
+  //     },
+  //   ],
+  // },
 ];

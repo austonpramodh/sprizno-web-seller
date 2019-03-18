@@ -6,12 +6,14 @@ import Signin from "./Pages/Signin";
 import Dashboard from "./Pages/Dashboard";
 import RequireAuth from "./Components/RequireAuth";
 
+// Add Not Found Route
 const App = () => (
   <CssBaseline>
     <Router>
       <Switch>
         <Route path="/signin" exact component={Signin} />
         <Route path="/" exact render={props => <RequireAuth {...props} Component={Dashboard} />} />
+        <Route path="/:id" render={props => <RequireAuth {...props} Component={Dashboard} />} />
         <Route path="/signup" exact component={Signup} />
       </Switch>
     </Router>

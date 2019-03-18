@@ -30,6 +30,13 @@ export default {
         ...defaultHeaders,
       },
     },
+    SAS_TOKEN: {
+      method: apiConstants.GET,
+      url: `${apiConstants.URLs.BASE_URL}${apiConstants.URLs.AUTH.SAS_TOKEN}`,
+      headers: {
+        ...defaultHeaders,
+      },
+    },
     // REFRESH TOKENS
     // RESET PASSWORD
     // OTP
@@ -65,6 +72,12 @@ export default {
       headers: {
         [apiConstants.API_VERSION_HEADER]: apiConstants.API_VERSIONS.PRODUCT.UPDATE,
         ...defaultHeaders,
+      },
+    },
+    UPLOAD_IMAGES: {
+      method: apiConstants.PUT,
+      headers: {
+        "x-ms-blob-type": "BlockBlob",
       },
     },
   },

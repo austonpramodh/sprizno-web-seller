@@ -66,12 +66,14 @@ class AppDrawer extends React.Component {
   render() {
     const { classes, isOpen } = this.props;
     const { listStates } = this.state;
-
+    // eslint-disable-next-line no-undef
+    const isMobile = window.innerWidth < 700;
     return (
       <Fragment>
         <Drawer
           open={isOpen}
           className={classes.drawer}
+          style={{ width: !isOpen || isMobile ? 0 : "240px" }}
           variant="persistent"
           classes={{
             paper: classes.drawerPaper,

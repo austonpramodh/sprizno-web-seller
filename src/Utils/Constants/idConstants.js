@@ -1,5 +1,5 @@
 export default {
   CATALOG: "CATALOG",
-  LIST_PRODUCTS: "LISTPRODUCTS",
-  ADD_PRODUCT: "ADDPRODUCT",
+  LIST_PRODUCTS: "listproducts",
+  ADD_PRODUCT: "addproduct",
 };

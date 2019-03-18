@@ -1,19 +1,21 @@
-import React, { Fragment } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { withStyles, AppBar, Toolbar, Typography, Button, IconButton } from "@material-ui/core";
 import { Menu as MenuIcon } from "@material-ui/icons";
 import styles from "./index.css";
 import Authentication from "../../Utils/Authentication";
-import AddProduct from "../../Components/AddProduct";
 import ListProducts from "../../Components/ListProducts";
 import AppDrawer from "../../Components/AppDrawer";
 
+const componentsList = [ListProducts];
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
+    // eslint-disable-next-line no-undef
+    const isMobile = window.innerWidth < 700;
     this.state = {
       selectedId: "",
-      isDrawerOpen: true,
+      isDrawerOpen: true && !isMobile,
     };
   }
 
@@ -21,8 +23,20 @@ class Dashboard extends React.Component {
     this.setState({ selectedId: id });
   };
 
+  componentDidMount = () => {
+    const {
+      match: {
+        params: { id },
+      },
+    } = this.props;
+    if (id) {
+      this.setState({ selectedId: id });
+    } else {
+      this.setState({ selectedId: componentsList[0].meta.id });
+    }
+  };
+
   render() {
-    const componentsList = [ListProducts, AddProduct];
     const { classes } = this.props;
     const { selectedId, isDrawerOpen } = this.state;
     const handleDrawerOpen = () => {
@@ -33,10 +47,6 @@ class Dashboard extends React.Component {
       const { history } = this.props;
       Authentication.logout();
       history.push("/signin");
-    };
-    const defaultComponent = () => {
-      const Component = componentsList[0];
-      return <Component />;
     };
 
     return (
@@ -59,17 +69,18 @@ class Dashboard extends React.Component {
             </Button>
           </Toolbar>
         </AppBar>
-        <div className={classes.toolbar} />
-        <AppDrawer isOpen={isDrawerOpen} handleSelction={this.handleIdSelction} />
-        <div className={classes.toolbar} />
-        <div className={classes.content}>
-          <Fragment>
-            {selectedId
-              ? componentsList.map(Component =>
-                  Component.meta.id === selectedId ? <Component /> : "",
-                )
-              : defaultComponent()}
-          </Fragment>
+        <AppDrawer
+          isOpen={isDrawerOpen}
+          handleSelction={this.handleIdSelction}
+          selectedId={selectedId}
+        />
+        <div>
+          <div className={classes.toolbar} />
+          <div className={classes.content}>
+            {componentsList.map(Component =>
+              Component.meta.id === selectedId ? <Component key={Component.meta.id} /> : "",
+            )}
+          </div>
         </div>
       </div>
     );
@@ -78,6 +89,7 @@ class Dashboard extends React.Component {
 Dashboard.propTypes = {
   classes: PropTypes.object,
   history: PropTypes.object,
+  match: PropTypes.object.isRequired,
 };
 Dashboard.defaultProps = {
   classes: {},
