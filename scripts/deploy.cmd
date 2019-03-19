@@ -95,11 +95,11 @@ echo Selecting NodeVersion
 call :SelectNodeVersion
 
 :: 4. Cleanig Repository
-echo Cleaning Repository Folder For Clean installation
-IF EXIST "%DEPLOYMENT_SOURCE%\node_modules" (
-  rm -r "%DEPLOYMENT_SOURCE%\node_modules"
-    echo Cleaning Completed
-)
+REM echo Cleaning Repository Folder For Clean installation
+REM IF EXIST "%DEPLOYMENT_SOURCE%\node_modules" (
+REM   rm -r "%DEPLOYMENT_SOURCE%\node_modules"
+REM     echo Cleaning Completed
+REM )
 
 :: 2. Install npm packages
 echo Installing NPM Packages
@@ -123,11 +123,11 @@ IF EXIST "%DEPLOYMENT_SOURCE%\node_modules" (
 )
 
 :: 4. Cleanig Repository
-echo Cleaning Repository Folder
-IF EXIST "%DEPLOYMENT_SOURCE%\node_modules" (
-  rm -r "%DEPLOYMENT_SOURCE%\node_modules"
-    echo Cleaning Completed
-)
+REM echo Cleaning Repository Folder
+REM IF EXIST "%DEPLOYMENT_SOURCE%\node_modules" (
+REM   rm -r "%DEPLOYMENT_SOURCE%\node_modules"
+REM     echo Cleaning Completed
+REM )
 
 :: 5. KuduSync
 echo Running KuduSync
