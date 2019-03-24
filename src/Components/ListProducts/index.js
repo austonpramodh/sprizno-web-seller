@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import React, { Component, Fragment } from "react";
+import React from "react";
 import { Grid, withStyles } from "@material-ui/core";
 import PropTypes from "prop-types";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
@@ -11,109 +11,70 @@ import ProductCard from "../ProductCard";
 import Styles from "./index.css";
 import AddProductCard from "../AddProductCard";
 
-class ListProducts extends Component {
-  static meta = { id: idConstants.LIST_PRODUCTS };
+const listProductsContext = React.createContext();
+export const { Consumer } = listProductsContext;
 
-  state = {
+const ListProducts = ({ classes }) => {
+  const [state, setState] = React.useState({
     products: [],
     isPageLoading: true,
-    deletingCardId: "",
-    isProductAdding: false,
-  };
+  });
 
-  componentDidMount() {
-    // request APi and get data
-    this.getAllProducts();
-  }
+  const { products, isPageLoading } = state;
 
-  getAllProducts = async () => {
+  const getAllProducts = async () => {
     const params = API.PRODUCT.GET_ALL;
     const response = await request(params);
     if (response.data) {
-      if (response.data.success) {
-        this.setState({ products: response.data.data, isPageLoading: false });
+      if (response.success) {
+        setState({ ...state, products: response.data, isPageLoading: false });
       } // else redirect to Login
-    } else this.setState({ isPageLoading: false }); // network failure
+    } else setState({ ...state, isPageLoading: false }); // network failure
   };
+  React.useEffect(() => {
+    getAllProducts();
+  }, []);
 
-  deleteProduct = async id => {
-    const { products } = this.state;
-    this.setState({ deletingCardId: id });
-    const params = API.PRODUCT.DELETE;
-    params.data = { id };
-    const response = await request(params);
-    if (response.data) {
-      if (response.data.success) {
-        const index = products.findIndex(product => product._id === id);
-        const newProducts = [...products];
-        newProducts.splice(index, 1);
-        this.setState({ deletingCardId: "", products: newProducts });
-      } else this.setState({ deletingCardId: "" }); // Internal Error
-    } else this.setState({ deletingCardId: "" }); // network failure
-  };
+  const { Provider } = listProductsContext;
 
-  addProduct = async product => {
-    this.setState({ isProductAdding: true });
-    const params = API.PRODUCT.ADD;
-    params.data = { ...product };
-    const response = await request(params);
-    if (response.data && response.data.success) {
-      const { products } = this.state;
-      const newProducts = [...products];
-      newProducts.push(response.data.data);
-      this.setState({ products: newProducts });
-    } else {
-      this.setState({ isProductAdding: false });
-    }
-    // console.log(product);
-  };
+  return isPageLoading ? (
+    <Loader />
+  ) : (
+    <Provider value={{ contextState: state, changeContextState: setState }}>
+      <Grid component={TransitionGroup} container spacing={24}>
+        {products.length > 0 &&
+          products.map(item => (
+            <CSSTransition
+              timeout={300}
+              appear
+              classNames={{
+                appear: classes.cardAppear,
+                appearActive: classes.cardAppearActive,
+              }}
+              key={item._id}
+            >
+              <Grid className={classes.gridItem} item xs>
+                <ProductCard item={item} />
+              </Grid>
+            </CSSTransition>
+          ))}
 
-  render() {
-    const { products, isPageLoading, deletingCardId, isProductAdding } = this.state;
-    const { classes } = this.props;
-    return isPageLoading ? (
-      <Loader />
-    ) : (
-      <Fragment>
-        <Grid component={TransitionGroup} container spacing={24}>
-          {products.length > 0 &&
-            products.map(item => (
-              <CSSTransition
-                timeout={300}
-                appear
-                classNames={{
-                  appear: classes.cardAppear,
-                  appearActive: classes.cardAppearActive,
-                }}
-                key={item.id}
-              >
-                <Grid className={classes.gridItem} item xs>
-                  <ProductCard
-                    deleteFunc={this.deleteProduct}
-                    item={item}
-                    deleteProcessing={deletingCardId}
-                  />
-                </Grid>
-              </CSSTransition>
-            ))}
-
-          <CSSTransition
-            timeout={300}
-            appear
-            classNames={{
-              appear: classes.cardAppear,
-              appearActive: classes.cardAppearActive,
-            }}
-          >
-            <Grid className={classes.gridItem} item xs>
-              <AddProductCard isProductAdding={isProductAdding} addFunc={this.addProduct} />
-            </Grid>
-          </CSSTransition>
-        </Grid>
-      </Fragment>
-    );
-  }
-}
+        <CSSTransition
+          timeout={300}
+          appear
+          classNames={{
+            appear: classes.cardAppear,
+            appearActive: classes.cardAppearActive,
+          }}
+        >
+          <Grid className={classes.gridItem} item xs>
+            <AddProductCard />
+          </Grid>
+        </CSSTransition>
+      </Grid>
+    </Provider>
+  );
+};
 
 ListProducts.propTypes = {
   classes: PropTypes.object,
@@ -122,4 +83,7 @@ ListProducts.defaultProps = {
   classes: {},
 };
 
-export default withStyles(Styles)(ListProducts);
+const StyledListProducts = withStyles(Styles)(ListProducts);
+StyledListProducts.meta = { id: idConstants.LIST_PRODUCTS };
+
+export default StyledListProducts;

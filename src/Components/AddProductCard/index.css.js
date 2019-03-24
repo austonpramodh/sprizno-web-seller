@@ -1,9 +1,12 @@
 export default () => ({
   card: {
-    width: 300,
-    height: 400,
+    maxWidth: 350,
+    maxHeight: 450,
+    minHeight: 350,
     display: "flex",
     flexDirection: "column",
+    width: "90vw",
+    height: "80vh",
   },
   cardHeader: {
     padding: "10px",
@@ -18,6 +21,8 @@ export default () => ({
   actions: {
     display: "flex",
     justifyContent: "flex-end",
+    padding: "16px",
+    paddingTop: "0px",
   },
   priceContainer: {
     marginRight: "auto",
@@ -40,5 +45,21 @@ export default () => ({
   stockInput: {
     width: "70px",
     marginLeft: "auto",
+    // marginRight: "auto",
+  },
+  priceInput: {
+    width: "70px",
+    // marginLeft: "auto",
+    marginRight: "auto",
+  },
+  button: {
+    marginTop: "auto",
+  },
+  categorySelector: {
+    width: "85px",
+    marginRight: "auto",
+  },
+  menuItemText: {
+    fontSize: "14px",
   },
 });

@@ -80,5 +80,12 @@ export default {
         "x-ms-blob-type": "BlockBlob",
       },
     },
+    CATEGORIES_LIST: {
+      method: apiConstants.GET,
+      url: `${apiConstants.URLs.COMMON_URL}${apiConstants.URLs.PRODUCT.CATEGORIES_LIST}`,
+      headers: {
+        ...defaultHeaders,
+      },
+    },
   },
 };

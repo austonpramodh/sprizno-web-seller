@@ -17,7 +17,7 @@ const request = async (params, cancelToken) =>
           headers: { ...params.headers, [apiConstants.TOKEN_HEADERS.AUTHORIZATION]: tokens.token },
         });
         if (response.data) {
-          resolve({ success: response.data.success, data: response.data });
+          resolve(response.data);
         } else resolve({ success: false }); // server error
       } catch (error) {
         resolve({ ...error, success: false, errMessage: "Network Failure" });
@@ -45,8 +45,8 @@ const request = async (params, cancelToken) =>
                 [apiConstants.TOKEN_HEADERS.AUTHORIZATION]: newTokens.token,
               },
             });
-            if (response.data && response.data.sucess) {
-              resolve({ success: "true", data: response.data });
+            if (response.data && response.data.success) {
+              resolve(response.data);
             } else resolve({ success: false, data: response.data });
           } catch (error) {
             resolve({ ...error, success: false, errMessage: "Network Failure" });

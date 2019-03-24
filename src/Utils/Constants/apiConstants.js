@@ -1,14 +1,15 @@
 const getBaseUrl = () => {
   if (process.env.NODE_ENV === "production") {
-    return "https://api.ipsimata.in/seller/";
+    return "https://api.ipsimata.in/";
   }
   // return "http://localhost:5000/seller/";
-  return "http://192.168.1.4:5000/seller/";
+  return "http://192.168.1.4:5000/";
 };
 
 export default {
   URLs: {
-    BASE_URL: getBaseUrl(),
+    BASE_URL: `${getBaseUrl()}seller/`,
+    COMMON_URL: `${getBaseUrl()}`,
     // BASE_URL: "https://sprizno-api.azurewebsites.net/seller/",
     // BASE_URL: "https://api.ipsimata.in/seller/",
     IMAGE_CONTAINER_URL: "https://spriznostorage.blob.core.windows.net/imagecontainer/",
@@ -22,6 +23,7 @@ export default {
       ADD: "product/add",
       GET_ALL: "product/getall",
       DELETE: "product/delete",
+      CATEGORIES_LIST: "categorieslist",
     },
   },
   POST: "post",
