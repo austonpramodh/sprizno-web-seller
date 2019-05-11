@@ -26,9 +26,9 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '${System.DefaultWorkingDirectory}'
+    SourceFolder: '$(System.DefaultWorkingDirectory)'
     Contents: 'web.config'
-    TargetFolder: '${System.DefaultWorkingDirectory}/build'
+    TargetFolder: '$(System.DefaultWorkingDirectory)/build'
 
 - task: ArchiveFiles@2
   inputs:
