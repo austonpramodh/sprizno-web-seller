@@ -4,12 +4,12 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-  #  branches:
-  #    include:
-  #      - master
-  tags:
-    include:
-      - runBuild
+   branches:
+     include:
+       - master
+  # tags:
+  #   include:
+  #     - runBuild
 
 pool:
   # vmImage: 'ubuntu-latest'
